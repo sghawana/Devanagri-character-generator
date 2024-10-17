@@ -2,4 +2,11 @@ data/
 *.log
 *.tmp
 
+images
+
 my_gan
+
+src/ADRL.ipynb
+src/rough.ipynb
+
+
