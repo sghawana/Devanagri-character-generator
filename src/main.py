@@ -10,11 +10,14 @@ DTYPE = torch.float32
 
 ### Loading Dataset
 
-ROOT_DIRECTORY = '/home/mtech1/gan/data/all'  
+ROOT_DIRECTORY = '/home/mtech1/gan/data/all' 
+SAVE_PATH = '/home/mtech1/gan/images/test/' 
+
 BATCH_SIZE = 128
 
+print('Loading Images')
 images = load_images_from_directory(ROOT_DIRECTORY)
-print(f"Loaded {len(images)} images.")
+print(f"Loaded {len(images)} images.\n\n")
 
 real_dataset = devnagari(images, DEVICE, DTYPE)
 real_dataloader = DataLoader(dataset=real_dataset,
@@ -23,6 +26,8 @@ real_dataloader = DataLoader(dataset=real_dataset,
                               )
 
 ### Training
+
+print('Training the model\n\n')
 
 NUM_EPOCHS = 10 
 
@@ -33,7 +38,6 @@ LEARNING_RATE_GENERATOR = 0.0002
 LEARNING_RATE = 0.0002
 MAX_GRAD_NORM = 1
 
-
 training_params={'device': DEVICE,
                  'dtype': DTYPE,
                  'real_data': real_dataloader,
@@ -41,8 +45,14 @@ training_params={'device': DEVICE,
                  'lrd': LEARNING_RATE_DISCRIMINATOR,
                  'betas': BETAS,
                  'num_epochs': NUM_EPOCHS,
-                 'max_grad_norm': MAX_GRAD_NORM}
+                 'max_grad_norm': MAX_GRAD_NORM,
+                 'save_at': SAVE_PATH}
 
 
 my_gan = GAN(device=DEVICE, dtype=DTYPE)
 gen_loss, disc_loss = my_gan.train_gan(**training_params)
+
+print('\nTraining Finished\n')
+
+###
+
