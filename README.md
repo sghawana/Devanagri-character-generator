@@ -1,2 +1,2 @@
-# Devnagri-charachter-generator
+# Devnagri-character-generator
 Generate alphabets and numbers from devnagri script using GAN and its different variations
