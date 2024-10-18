@@ -47,7 +47,7 @@ Generator parameters $\phi$ are frozen
 <br>
 $$L_G(\phi) = \min_{\phi} \left( E_{z \sim p_z(z)} \left[ \log (1\ - \ D_{\theta}(G_{\phi}(z))) \right] \right)$$
 
-Discriminator parameters $\theta$ are frozen
+Discriminator parameters $\theta$ are frozen<br>
 We sucessively optimise loss for generator and discriminator keeping parameters of other as constant
 
 ---
