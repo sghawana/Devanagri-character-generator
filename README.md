@@ -16,33 +16,114 @@ You can download the dataset from the following link: [Devanagari MNIST dataset]
 
 This project implements a standard GAN with the following components:
 
-	• Generator: A neural network that generates images from random noise (latent space).
-	• Discriminator: A neural network that tries to distinguish between real images from the dataset and fake images produced by the generator.
+• **Generator:** A neural network that generates images from random noise (latent space).
+
+• **Discriminator:** A neural network that tries to distinguish between real images from the dataset and fake images produced by the generator.
+
+![image1](./utils/gan_dia.png)
+
 
 Both networks are trained in an adversarial manner, with the generator trying to fool the discriminator and the discriminator learning to identify real vs. fake images.
 
+---
+### **Loss Function**
 
-
-**Discriminator Loss:** <br>
 $$
-L_D() = - E_{x \sim p_{data}(x)}[\log(D_{\theta}(x))] - E_{z \sim p_z(z)}[\log(1 - D_{\theta}(G_{\phi}(z)))]
+L_{GAN}(\theta, \phi) = \min_{\phi} \max_{\theta} \left( \mathbb{E}_{x \sim p_{data}(x)}[\log(D_{\theta}(x))] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D_{\theta}(G_{\phi}(z)))] \right)
+$$
+
+where $\theta$ and $\phi$ are discriminator and generator parameters respectively.
+
+We can further split the loss into Generator and Discriminator Loss
+
+**1. Discriminator Loss:** <br>
+$$
+L_D(\theta) = \max_{\theta}\ \left( \mathbb{E}_{x \sim p_{data}(x)}[\log(D_{\theta}(x))] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D_{\theta}(G_{\phi}(z)))] \right)
 $$ <br>
 
-**Generator Loss:** <br>
+Generator parameters $\phi$ are frozen
+
+
+**2. Generator Loss:** <br>
 $$
-L_G = - \mathbb{E}_{z \sim p_z(z)} \left[ \log (D(G(z))) \right]
+L_G(\phi) = \min_{\phi} \left( \mathbb{E}_{z \sim p_z(z)} \left[ \log (1\ - \ D_{\theta}(G_{\phi}(z))) \right] \right)
 $$
 
+Discriminator parameters $\theta$ are frozen
 
 
+We sucessively optimise loss for generator and discriminator keeping parameters of other as constant
+
+---
 ### GAN Architecture
 
 The Architecture used is [DCGAN](https://arxiv.org/pdf/1511.06434).
 
-![image1](./utils/dcgan.png)
+![image2](./utils/dcgan.png)
 
 
 
-	• Generator: Fully connected layers followed by transposed convolutions to upsample the noise vector into a 32x32 image.
-	• Discriminator: Convolutional layers followed by fully connected layers to classify images as real or fake.
+• **Generator:** Fully connected layers followed by transposed convolutions to upsample the noise vector into a 32x32 image.
+• **Discriminator:** Convolutional layers followed by fully connected layers to classify images as real or fake.
+
+---
+
+## Implementatiaon
+
+	Set all the necessaary hyperparameters and run main.py
+
+- **DEVICE:** This sets the hardware device for training, either CUDA (GPU) or CPU.
+
+- **DTYPE:** Defines the data type for the tensors in the model. [default: torch.float32]
+
+- **ROOT_DIRECTORY:** Path where the training dataset is stored. 
+
+- **SAVE_PATH:** Directory where generated images will be saved after training.
+
+- **BATCH_SIZE:** [default: 128]
+
+- **NUM_EPOCHS:** [default: 100]
+
+- **BETAS:** Parameters for the Adam optimizer, controlling the exponential decay rates for the first ($\beta_1$) and second ($\beta_2$) moment estimates. [default: (0.5, 0.999)]
+
+- **LEARNING_RATE_DISCRIMINATOR:** [default: 0.0001]
+
+- **LEARNING_RATE_GENERATOR:** [deafult: 0.0002]
+
+- **MAX_GRAD_NORM:** clip the gradient norms to prevent exploding gradients. [default: 1]
+
+---
+
+## RESULTS
+
+![image3](./utils/comparison_epoch_1.png)
+![image4](./utils/comparison_epoch_2.png)
+![image5](./utils/comparison_epoch_3.png)
+![image6](./utils/comparison_epoch_15.png)
+![image7](./utils/comparison_epoch_78.png)
+![image8](./utils/comparison_epoch_100.png)
+
+---
+
+## Training Best Practices
+
+GAN's are notoriously difficult to train this the due to the loss function which is a **saddle point** optimization problem. Such problems do not easily converge to a solution hence a lot of hyperparameter tuning is required
+
+I've followed some of the recommended practices that help in stabilizing GAN training:
+
+**1.** The generator loss is given by
+$$ L_G(\phi) = \min_{\phi} \left( \mathbb{E}_{z \sim p_z(z)} \left[ \log (1\ - \ D_{\theta}(G_{\phi}(z))) \right] \right)
+$$ in practice is has been found that instead 
+$$ L_G(\phi) = \max_{\phi} \left( \mathbb{E}_{z \sim p_z(z)} \left[ \log (D_{\theta}(G_{\phi}(z))) \right] \right)$$ works much better as it provides necessary early gradients to the generator
+<br>
+
+**2.** Use of inverted labels that is 0 for real images and 1 for fake images
+<br>
+
+**3.** Use of label smoothing where real labels are uniformly distributed between 0 - 0.1 and fake labels are uniformly distributed between 0.9 - 1.0
+
+**4.** Add small amount of gaussian noise to real training samples
+
+**5.** Use gradient clipping to limit gradient norms 
+
 
