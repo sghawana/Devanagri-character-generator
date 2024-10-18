@@ -42,7 +42,7 @@ class GAN(nn.Module):
                 
                 with tqdm(total=len(real_data), desc=f"Epoch {epoch+1}/{num_epochs}", leave=True) as batch_pbar:
                     for real_batch in real_data:
-                        real_batch = real_batch  #+ 0.15 * torch.randn_like(real_batch) #add noise
+                        real_batch = real_batch + 0.15 * torch.randn_like(real_batch) #add noise
                         B = real_batch.shape[0]
                         
                         Z = torch.randn((B, 100), device=device, dtype=dtype)

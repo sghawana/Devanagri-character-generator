@@ -24,9 +24,8 @@ class Generator_CNN(nn.Module):
         
         self.conv4 = nn.Conv2d(in_channels=32, out_channels=1, kernel_size=3, stride=1, padding=1, device=self.device, dtype=self.dtype)
         
-
     def forward(self, x):
-
+        
         x = self.project(x)
         x = F.tanh(x)
         x = x.reshape(-1, 1024, 4, 4)
@@ -48,7 +47,7 @@ class Generator_CNN(nn.Module):
         
         x = self.conv4(x)
         x = F.sigmoid(x)
-
+        
         return x
 
         

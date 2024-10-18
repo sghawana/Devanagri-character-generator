@@ -40,4 +40,5 @@ class Discriminator_CNN(nn.Module):
 
         x = self.linear2(x)
         x = F.sigmoid(x)
+        
         return x

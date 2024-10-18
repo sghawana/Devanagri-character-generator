@@ -55,4 +55,3 @@ gen_loss, disc_loss = my_gan.train_gan(**training_params)
 print('\nTraining Finished\n')
 
 ###
-

@@ -8,6 +8,7 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 
 def load_images_from_directory(root_dir):
+    
     image_list = []
     total_files = sum([len(files) for _, _, files in os.walk(root_dir)])
     
@@ -25,8 +26,6 @@ def load_images_from_directory(root_dir):
                 pbar.update(1)
     
     return image_list
-
-
 
 class devnagari(Dataset):
     def __init__(self, data, device, dtype):
