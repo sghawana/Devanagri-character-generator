@@ -16,8 +16,8 @@ You can download the dataset from the following link: [Devanagari MNIST dataset]
 
 This project implements a standard GAN with the following components:
 
-	•	Generator: A neural network that generates images from random noise (latent space).
-	•	Discriminator: A neural network that tries to distinguish between real images from the dataset and fake images produced by the generator.
+	• Generator: A neural network that generates images from random noise (latent space).
+	• Discriminator: A neural network that tries to distinguish between real images from the dataset and fake images produced by the generator.
 
 Both networks are trained in an adversarial manner, with the generator trying to fool the discriminator and the discriminator learning to identify real vs. fake images.
 
@@ -39,8 +39,10 @@ $$
 
 The Architecture used is [DCGAN](https://arxiv.org/pdf/1511.06434).
 
+![image1](./utils/dcgan.png)
 
 
-	•	Generator: Fully connected layers followed by transposed convolutions (deconvolutions) to upsample the noise vector into a 28x28 image.
-	•	Discriminator: Convolutional layers followed by fully connected layers to classify images as real or fake.
+
+	• Generator: Fully connected layers followed by transposed convolutions to upsample the noise vector into a 32x32 image.
+	• Discriminator: Convolutional layers followed by fully connected layers to classify images as real or fake.
 
